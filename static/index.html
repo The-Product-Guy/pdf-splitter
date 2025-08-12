@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Splitter</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f7;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #1d1d1f;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #86868b;
+            margin-bottom: 40px;
+        }
+        .upload-area {
+            border: 2px dashed #007AFF;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .upload-area:hover {
+            background-color: #f0f8ff;
+        }
+        .upload-area.dragover {
+            border-color: #34C759;
+            background-color: #f0fff0;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d1d6;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .toggle-group {
+            display: flex;
+            background: #f2f2f7;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 20px;
+        }
+        .toggle-option {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .toggle-option.active {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .submit-btn {
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        .submit-btn:hover {
+            background: #0056CC;
+        }
+        .submit-btn:disabled {
+            background: #d1d1d6;
+            cursor: not-allowed;
+        }
+        .progress {
+            display: none;
+            margin-top: 20px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f2f2f7;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #007AFF;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .error, .success {
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 20px;
+            display: none;
+        }
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+        .success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PDF Splitter</h1>
+        <p class="subtitle">Split your PDFs by pages or ranges with privacy-first local processing</p>
+        
+        <form id="splitForm" enctype="multipart/form-data">
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="pdfFile" name="file" accept=".pdf" style="display: none;">
+                <div id="uploadText">
+                    <strong>Drop your PDF here</strong><br>
+                    or click to browse<br>
+                    <small>Max 200MB</small>
+                </div>
+            </div>
+
+            <div class="toggle-group">
+                <div class="toggle-option active" data-mode="pages">Split by pages</div>
+                <div class="toggle-option" data-mode="size">Split by size</div>
+            </div>
+
+            <div class="form-group" id="pagesGroup">
+                <label for="pageCount">Number of pages per split:</label>
+                <input type="number" id="pageCount" name="pageCount" value="100" min="1" placeholder="e.g., 100">
+            </div>
+
+            <div class="form-group" id="sizeGroup" style="display: none;">
+                <label for="sizeLimit">Maximum size per split (MB):</label>
+                <input type="number" id="sizeLimit" name="sizeLimit" value="50" min="1" placeholder="e.g., 50">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password (if PDF is protected):</label>
+                <input type="password" id="password" name="password" placeholder="Enter password">
+            </div>
+
+            <div class="form-group">
+                <label for="naming">File naming template:</label>
+                <input type="text" id="naming" name="naming_template" value="{base}_part{index}" 
+                       placeholder="{base}_part{index}">
+                <small>Use {base} for original filename, {index} for part number</small>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Split PDF</button>
+
+            <div class="progress" id="progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p>Processing your PDF...</p>
+            </div>
+
+            <div class="error" id="error"></div>
+            <div class="success" id="success"></div>
+        </form>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('pdfFile');
+        const uploadText = document.getElementById('uploadText');
+        const form = document.getElementById('splitForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const progress = document.getElementById('progress');
+        const errorDiv = document.getElementById('error');
+        const successDiv = document.getElementById('success');
+
+        // File upload handling
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                updateUploadText(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                updateUploadText(e.target.files[0]);
+            }
+        });
+
+        function updateUploadText(file) {
+            const size = (file.size / 1024 / 1024).toFixed(1);
+            uploadText.innerHTML = `<strong>${file.name}</strong><br>${size} MB`;
+        }
+
+        // Mode toggle
+        document.querySelectorAll('.toggle-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.toggle-option').forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                
+                const mode = option.getAttribute('data-mode');
+                if (mode === 'pages') {
+                    document.getElementById('pagesGroup').style.display = 'block';
+                    document.getElementById('sizeGroup').style.display = 'none';
+                } else {
+                    document.getElementById('pagesGroup').style.display = 'none';
+                    document.getElementById('sizeGroup').style.display = 'block';
+                }
+            });
+        });
+
+        // Form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!fileInput.files[0]) {
+                showError('Please select a PDF file');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            
+            const activeMode = document.querySelector('.toggle-option.active').getAttribute('data-mode');
+            formData.append('mode', activeMode);
+            
+            if (activeMode === 'pages') {
+                formData.append('pageCount', document.getElementById('pageCount').value);
+            } else {
+                formData.append('sizeLimit', document.getElementById('sizeLimit').value);
+            }
+            
+            formData.append('password', document.getElementById('password').value);
+            formData.append('naming_template', document.getElementById('naming').value);
+
+            submitBtn.disabled = true;
+            progress.style.display = 'block';
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+
+            try {
+                const response = await fetch('/split', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = response.headers.get('Content-Disposition')?.split('filename=')[1] || 'split_pdfs.zip';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                    
+                    showSuccess('PDF split successfully! Download should start automatically.');
+                } else {
+                    const error = await response.json();
+                    showError(error.error || 'Failed to split PDF');
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                progress.style.display = 'none';
+            }
+        });
+
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            successDiv.style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            errorDiv.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
