@@ -12,6 +12,10 @@ app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024  # 200MB limit
 def index():
     return app.send_static_file('index.html')
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({'status': 'healthy', 'service': 'pdf-splitter'}), 200
+
 @app.route('/split', methods=['POST'])
 def split_pdf():
     if 'file' not in request.files:
@@ -54,4 +58,7 @@ def split_pdf():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8000)
+    import os
+    port = int(os.environ.get('PORT', 8000))
+    debug = os.environ.get('FLASK_ENV') == 'development'
+    app.run(debug=debug, host='0.0.0.0', port=port)
