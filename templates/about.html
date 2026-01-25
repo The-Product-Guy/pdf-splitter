@@ -2,6 +2,18 @@
 <html lang="en">
 
 <head>
+    <!-- Google Tag Manager -->
+    {% if gtm_id %}
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', '{{ gtm_id }}');</script>
+    {% endif %}
+    <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - PDF Splitter</title>
@@ -18,6 +30,12 @@
 </head>
 
 <body>
+    <!-- Google Tag Manager (noscript) -->
+    {% if gtm_id %}
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ gtm_id }}" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    {% endif %}
+    <!-- End Google Tag Manager (noscript) -->
     <div class="container">
         <h1>About PDF Splitter</h1>
         <p class="subtitle">Simple, Secure, and Free</p>
@@ -36,7 +54,8 @@
             <li><strong>Split by Size:</strong> Provide a target file size (e.g., 10MB) and we'll split your PDF
                 perfectly, without reducing image quality (unlike "compression" tools).</li>
             <li><strong>No 50MB Limits:</strong> While others cap you at 50MB, we support files up to
-                <strong>200MB</strong> for free.</li>
+                <strong>200MB</strong> for free.
+            </li>
             <li><strong>Privacy First:</strong> We operate a strict Zero Retention Policy.</li>
             <li><strong>Fast:</strong> Optimized for speed with minimal wait times.</li>
             <li><strong>Free:</strong> No hidden costs or subscriptions.</li>

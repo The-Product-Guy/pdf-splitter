@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, render_template
 import os
 import tempfile
 import shutil
@@ -7,8 +7,11 @@ from flask_limiter.util import get_remote_address
 from pdf_splitter import PDFSplitter
 from utils import validate_file_size, generate_filename, validate_pdf_header
 
-app = Flask(__name__, static_folder='static', static_url_path='')
+app = Flask(__name__, static_folder='static', static_url_path='/static', template_folder='templates')
 app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024  # 200MB limit
+
+# Get GTM ID from environment variable
+GTM_ID = os.environ.get('GTM_ID', '')
 
 # Initialize Rate Limiter
 limiter = Limiter(
@@ -20,7 +23,7 @@ limiter = Limiter(
 
 @app.route('/', methods=['GET'])
 def index():
-    return app.send_static_file('index.html')
+    return render_template('index.html', gtm_id=GTM_ID)
 
 @app.route('/sitemap.xml')
 def sitemap():
@@ -32,19 +35,19 @@ def robots():
 
 @app.route('/about')
 def about():
-    return app.send_static_file('about.html')
+    return render_template('about.html', gtm_id=GTM_ID)
 
 @app.route('/terms')
 def terms():
-    return app.send_static_file('terms.html')
+    return render_template('terms.html', gtm_id=GTM_ID)
 
 @app.route('/privacy')
 def privacy():
-    return app.send_static_file('privacy.html')
+    return render_template('privacy.html', gtm_id=GTM_ID)
 
 @app.route('/contact')
 def contact():
-    return app.send_static_file('contact.html')
+    return render_template('contact.html', gtm_id=GTM_ID)
 
 @app.route('/health', methods=['GET'])
 def health_check():
