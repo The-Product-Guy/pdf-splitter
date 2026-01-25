@@ -1,127 +1,78 @@
-# PDF Splitter
+# PDF Splitter - Secure, Private, & Beautiful
 
-A web application for splitting PDF files by page count or file size, built with Flask and deployed on Railway.
+A modern, privacy-focused web application for splitting PDF files. Built with Flask, it features a stunning Glassmorphism UI, "Zero Retention" architecture, and robust security measures.
 
-## Features
+![PDF Splitter UI](https://pdf-splitter.railway.app/og-image.jpg)
 
-- **Split by Pages**: Split PDFs into chunks of specified page count
-- **Split by Size**: Split PDFs into chunks with maximum file size (MB)
-- **Password Support**: Handle password-protected PDFs
-- **Custom Naming**: Configurable file naming templates
-- **Web Interface**: Drag-and-drop upload with responsive design
-- **File Limits**: Supports PDFs up to 200MB
+## ✨ Features
 
-## Local Development
+-   **Zero Retention Policy**: Files are processed in temporary memory and strictly deleted immediately after download. Nothing is stored on our servers.
+-   **Local Processing**: The backend handles files ephemerally, ensuring maximum privacy.
+-   **Split Modes**:
+    -   **By Pages**: Split into chunks of N pages (e.g., every 10 pages).
+    -   **By Size**: Split into chunks of X MB (e.g., max 10MB per file).
+    -   **By Range**: Extract specific ranges (e.g., `1-5, 10-12`).
+-   **Advanced Naming**: Custom templates for output filenames (e.g., `Contract_{index}.pdf`).
+-   **Security**:
+    -   Strict Magic Number validation (prevents fake PDF uploads).
+    -   Rate Limiting (10 requests/hour per IP).
+    -   Bot Protection (Honeypot fields).
+-   **Modern UI**: Fully responsive Glassmorphism design with animations and dark-mode friendly gradients.
+-   **SEO Optimized**: Full meta tag support, sitemap, and Open Graph data.
+
+## 🚀 Live Demo
+
+Check out the live deployment here: [PDF Splitter Demo](https://pdf-splitter.railway.app/)
+
+## 🛠️ Local Development
 
 ### Prerequisites
-- Python 3.11+
-- pip
+-   Python 3.11+
+-   pip
 
 ### Setup
 
-1. Clone the repository:
-```bash
-git clone https://github.com/The-Product-Guy/pdf-splitter.git
-cd pdf-splitter
-```
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/The-Product-Guy/pdf-splitter.git
+    cd pdf-splitter
+    ```
 
-2. Create virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+2.  **Create virtual environment**
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # Windows: venv\Scripts\activate
+    ```
 
-3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+3.  **Install dependencies**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-4. Run the application:
-```bash
-python app.py
-```
+4.  **Run the application**
+    ```bash
+    python app.py
+    ```
 
-Visit `http://localhost:8000` to use the application.
+5.  **Visit** `http://localhost:8000`
 
-## Railway Deployment
+## 📦 Deployment (Railway)
 
-This application is configured for deployment on Railway using the included configuration files.
+This project is optimized for [Railway](https://railway.app/).
 
-### Files for Railway Deployment:
-- `railway.json` - Railway service configuration
-- `runtime.txt` - Python version specification
-- `requirements.txt` - Python dependencies including gunicorn
+1.  **Fork** this repo.
+2.  **Connect** in Railway.
+3.  **Deploy**! No complex configuration needed.
+    -   `railway.json` handles the build schema.
+    -   `Procfile` / `Start Command`: `gunicorn app:app`
 
-### Deploy to Railway:
+## 🔒 Privacy & Security
 
-1. **Connect Repository**: Link your GitHub repository to Railway
-2. **Auto-Deploy**: Railway will automatically detect the configuration and deploy
-3. **Environment Variables**: None required for basic functionality
+We take privacy seriously:
+-   **No Database**: We don't track users or save file metadata.
+-   **Ephemeral Storage**: `tempfile` is used for processing, which is OS-managed and self-cleaning.
+-   **Validation**: Every upload is binary-scanned for `%PDF` headers to prevent malware injection vectors.
 
-### Railway Configuration Details:
+## 📄 License
 
-- **Build**: Uses Nixpacks with automatic Python detection
-- **Start Command**: `gunicorn --bind 0.0.0.0:$PORT app:app`
-- **Health Check**: Available at `/health` endpoint
-- **Restart Policy**: Restarts only on failure
-
-## API Endpoints
-
-- `GET /` - Web interface
-- `GET /health` - Health check endpoint
-- `POST /split` - PDF splitting endpoint
-
-### Split API Usage:
-
-```bash
-curl -X POST \
-  -F "file=@document.pdf" \
-  -F "mode=pages" \
-  -F "pageCount=50" \
-  -F "naming_template={base}_part{index}" \
-  http://your-railway-app.railway.app/split
-```
-
-Parameters:
-- `file`: PDF file to split
-- `mode`: Either "pages" or "size"
-- `pageCount`: Number of pages per split (when mode=pages)
-- `sizeLimit`: Max MB per split (when mode=size)
-- `password`: PDF password (optional)
-- `naming_template`: Output filename template (optional)
-
-## Technology Stack
-
-- **Backend**: Flask (Python)
-- **PDF Processing**: pikepdf, PyMuPDF
-- **Frontend**: HTML, CSS, JavaScript
-- **Deployment**: Railway
-- **Production Server**: Gunicorn
-
-## File Structure
-
-```
-pdf-splitter/
-├── app.py                 # Main Flask application
-├── pdf_splitter.py        # PDF processing logic
-├── utils.py              # Utility functions
-├── static/
-│   └── index.html        # Web interface
-├── requirements.txt      # Python dependencies
-├── railway.json         # Railway configuration
-├── runtime.txt          # Python version
-├── .gitignore           # Git ignore rules
-└── README.md            # This file
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test locally
-5. Submit a pull request
-
-## License
-
-MIT License - see LICENSE file for details.
+MIT License - feel free to use this for your own projects!

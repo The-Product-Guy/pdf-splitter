@@ -2,22 +2,60 @@ from flask import Flask, request, jsonify, send_file
 import os
 import tempfile
 import shutil
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from pdf_splitter import PDFSplitter
-from utils import validate_file_size, generate_filename
+from utils import validate_file_size, generate_filename, validate_pdf_header
 
 app = Flask(__name__, static_folder='static', static_url_path='')
 app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024  # 200MB limit
 
+# Initialize Rate Limiter
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://"
+)
+
 @app.route('/', methods=['GET'])
 def index():
     return app.send_static_file('index.html')
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return app.send_static_file('sitemap.xml')
+
+@app.route('/robots.txt')
+def robots():
+    return app.send_static_file('robots.txt')
+
+@app.route('/about')
+def about():
+    return app.send_static_file('about.html')
+
+@app.route('/terms')
+def terms():
+    return app.send_static_file('terms.html')
+
+@app.route('/privacy')
+def privacy():
+    return app.send_static_file('privacy.html')
+
+@app.route('/contact')
+def contact():
+    return app.send_static_file('contact.html')
 
 @app.route('/health', methods=['GET'])
 def health_check():
     return jsonify({'status': 'healthy', 'service': 'pdf-splitter'}), 200
 
 @app.route('/split', methods=['POST'])
+@limiter.limit("10 per hour")  # Strict limit for splitting to save resources
 def split_pdf():
+    # Honeypot check for bots
+    if request.form.get('website_url'):
+        return jsonify({'error': 'Spamm detected'}), 400
     if 'file' not in request.files:
         return jsonify({'error': 'No file provided'}), 400
     
@@ -27,6 +65,12 @@ def split_pdf():
     
     if not file.filename.lower().endswith('.pdf'):
         return jsonify({'error': 'File must be a PDF'}), 400
+    
+    
+    
+    # Strict Magic Number Validation
+    if not validate_pdf_header(file.stream):
+        return jsonify({'error': 'Invalid PDF file. Header check failed.'}), 400
     
     mode = request.form.get('mode', 'pages')
     password = request.form.get('password', '')
@@ -45,6 +89,9 @@ def split_pdf():
             elif mode == 'size':
                 size_limit = int(request.form.get('sizeLimit', 50))
                 output_files = splitter.split_by_size(size_limit, naming_template)
+            elif mode == 'ranges':
+                ranges = request.form.get('ranges', '')
+                output_files = splitter.split_by_ranges(ranges, naming_template)
             else:
                 return jsonify({'error': 'Invalid split mode'}), 400
             

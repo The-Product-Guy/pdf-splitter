@@ -1,142 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Splitter</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f7;
-        }
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #1d1d1f;
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            text-align: center;
-            color: #86868b;
-            margin-bottom: 40px;
-        }
-        .upload-area {
-            border: 2px dashed #007AFF;
-            border-radius: 8px;
-            padding: 40px;
-            text-align: center;
-            margin-bottom: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .upload-area:hover {
-            background-color: #f0f8ff;
-        }
-        .upload-area.dragover {
-            border-color: #34C759;
-            background-color: #f0fff0;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #1d1d1f;
-        }
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #d1d1d6;
-            border-radius: 6px;
-            font-size: 16px;
-        }
-        .toggle-group {
-            display: flex;
-            background: #f2f2f7;
-            border-radius: 8px;
-            padding: 4px;
-            margin-bottom: 20px;
-        }
-        .toggle-option {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .toggle-option.active {
-            background: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .submit-btn {
-            background: #007AFF;
-            color: white;
-            border: none;
-            padding: 16px 32px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.3s ease;
-        }
-        .submit-btn:hover {
-            background: #0056CC;
-        }
-        .submit-btn:disabled {
-            background: #d1d1d6;
-            cursor: not-allowed;
-        }
-        .progress {
-            display: none;
-            margin-top: 20px;
-        }
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #f2f2f7;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: #007AFF;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-        .error, .success {
-            padding: 12px;
-            border-radius: 6px;
-            margin-top: 20px;
-            display: none;
-        }
-        .error {
-            background: #ffebee;
-            color: #c62828;
-            border: 1px solid #ffcdd2;
-        }
-        .success {
-            background: #e8f5e8;
-            color: #2e7d32;
-            border: 1px solid #c8e6c9;
-        }
-    </style>
+    <title>PDF Splitter - Free Secure Online Tool</title>
+    <meta name="description"
+        content="Split PDF files online for free. Extract pages, split by size, or define custom ranges. Secure, private, and processes files locally in your browser/server. No sign-up required.">
+    <meta name="keywords"
+        content="pdf splitter, split pdf online, free pdf tool, extract pdf pages, secure pdf processing">
+    <meta name="author" content="PDF Splitter">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pdf-splitter.railway.app/">
+    <meta property="og:title" content="PDF Splitter - Free Secure Online Tool">
+    <meta property="og:description" content="Split PDF files instantly. Zero data retention. No file size limits.">
+    <meta property="og:image" content="https://pdf-splitter.railway.app/og-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://pdf-splitter.railway.app/">
+    <meta property="twitter:title" content="PDF Splitter - Free Secure Online Tool">
+    <meta property="twitter:description" content="Split PDF files instantly. Zero data retention. No file size limits.">
+    <meta property="twitter:image" content="https://pdf-splitter.railway.app/og-image.jpg">
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
         <h1>PDF Splitter</h1>
         <p class="subtitle">Split your PDFs by pages or ranges with privacy-first local processing</p>
-        
+
         <form id="splitForm" enctype="multipart/form-data">
             <div class="upload-area" id="uploadArea">
                 <input type="file" id="pdfFile" name="file" accept=".pdf" style="display: none;">
@@ -149,29 +45,76 @@
 
             <div class="toggle-group">
                 <div class="toggle-option active" data-mode="pages">Split by pages</div>
+                <div class="toggle-option" data-mode="ranges">Split by ranges</div>
                 <div class="toggle-option" data-mode="size">Split by size</div>
             </div>
 
             <div class="form-group" id="pagesGroup">
-                <label for="pageCount">Number of pages per split:</label>
+                <label for="pageCount">
+                    Number of pages per split
+                    <span class="info-icon"
+                        data-tooltip="How many pages should be in each split file? e.g., 100 will create files with 100 pages each.">i</span>
+                </label>
                 <input type="number" id="pageCount" name="pageCount" value="100" min="1" placeholder="e.g., 100">
             </div>
 
             <div class="form-group" id="sizeGroup" style="display: none;">
-                <label for="sizeLimit">Maximum size per split (MB):</label>
+                <label for="sizeLimit">
+                    Maximum size per split (MB)
+                    <span class="info-icon"
+                        data-tooltip="The maximum file size for each split file in Megabytes.">i</span>
+                </label>
                 <input type="number" id="sizeLimit" name="sizeLimit" value="50" min="1" placeholder="e.g., 50">
             </div>
 
-            <div class="form-group">
-                <label for="password">Password (if PDF is protected):</label>
-                <input type="password" id="password" name="password" placeholder="Enter password">
+            <div class="form-group" id="rangesGroup" style="display: none;">
+                <label for="ranges">
+                    Page ranges
+                    <span class="info-icon"
+                        data-tooltip="Specific pages or ranges to extract. Use commas to separate. e.g., '1-5, 10' will create one file with pages 1 to 5, and another with page 10.">i</span>
+                </label>
+                <input type="text" id="ranges" name="ranges" placeholder="e.g., 1-5, 8-10, 15-">
+                <small>Comma-separated ranges. Example: "1-5, 8-10" to extract pages 1-5 and 8-10 as separate
+                    files.</small>
             </div>
 
             <div class="form-group">
-                <label for="naming">File naming template:</label>
-                <input type="text" id="naming" name="naming_template" value="{base}_part{index}" 
-                       placeholder="{base}_part{index}">
-                <small>Use {base} for original filename, {index} for part number</small>
+                <label for="password">
+                    Password (optional)
+                    <span class="info-icon"
+                        data-tooltip="If the original PDF is password protected, enter it here so we can read it.">i</span>
+                </label>
+                <input type="password" id="password" name="password" placeholder="Enter password">
+            </div>
+
+            <!-- Honeypot field for bots -->
+            <div style="display: none; visibility: hidden; opacity: 0; height: 0; width: 0; pointer-events: none;">
+                <label for="website_url">Website URL</label>
+                <input type="text" id="website_url" name="website_url" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="advanced-section">
+                <button type="button" class="advanced-toggle" id="advancedToggle" aria-expanded="false">
+                    <span>Advanced Options</span>
+                    <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </button>
+
+                <div class="advanced-content" id="advancedContent" style="display: none;">
+                    <div class="form-group">
+                        <label for="naming">
+                            File naming template
+                            <span class="info-icon"
+                                data-tooltip="Define how output files are named.&#10;{base} = Original filename&#10;{index} = Part number&#10;e.g., '{base}_part{index}' becomes 'Contract_part1.pdf'">i</span>
+                        </label>
+                        <input type="text" id="naming" name="naming_template" value="{base}_part{index}"
+                            placeholder="{base}_part{index}">
+                        <small>Use {base} for original filename, {index} for part number</small>
+                    </div>
+                </div>
             </div>
 
             <button type="submit" class="submit-btn" id="submitBtn">Split PDF</button>
@@ -187,6 +130,17 @@
             <div class="success" id="success"></div>
         </form>
     </div>
+
+    <footer>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/terms">Terms</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/contact">Contact</a>
+        </nav>
+        <span class="copyright">&copy; 2024 PDF Splitter. All rights reserved.</span>
+    </footer>
 
     <script>
         const uploadArea = document.getElementById('uploadArea');
@@ -233,22 +187,40 @@
             option.addEventListener('click', () => {
                 document.querySelectorAll('.toggle-option').forEach(opt => opt.classList.remove('active'));
                 option.classList.add('active');
-                
+
                 const mode = option.getAttribute('data-mode');
+
+                // Hide all groups
+                document.getElementById('pagesGroup').style.display = 'none';
+                document.getElementById('sizeGroup').style.display = 'none';
+                document.getElementById('rangesGroup').style.display = 'none';
+
+                // Show active group
                 if (mode === 'pages') {
                     document.getElementById('pagesGroup').style.display = 'block';
-                    document.getElementById('sizeGroup').style.display = 'none';
-                } else {
-                    document.getElementById('pagesGroup').style.display = 'none';
+                } else if (mode === 'size') {
                     document.getElementById('sizeGroup').style.display = 'block';
+                } else if (mode === 'ranges') {
+                    document.getElementById('rangesGroup').style.display = 'block';
                 }
             });
+        });
+
+        // Advanced options toggle
+        const advancedToggle = document.getElementById('advancedToggle');
+        const advancedContent = document.getElementById('advancedContent');
+
+        advancedToggle.addEventListener('click', () => {
+            const isVisible = advancedContent.style.display !== 'none';
+            advancedContent.style.display = isVisible ? 'none' : 'block';
+            advancedToggle.classList.toggle('active');
+            advancedToggle.setAttribute('aria-expanded', !isVisible);
         });
 
         // Form submission
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             if (!fileInput.files[0]) {
                 showError('Please select a PDF file');
                 return;
@@ -256,16 +228,18 @@
 
             const formData = new FormData();
             formData.append('file', fileInput.files[0]);
-            
+
             const activeMode = document.querySelector('.toggle-option.active').getAttribute('data-mode');
             formData.append('mode', activeMode);
-            
+
             if (activeMode === 'pages') {
                 formData.append('pageCount', document.getElementById('pageCount').value);
-            } else {
+            } else if (activeMode === 'size') {
                 formData.append('sizeLimit', document.getElementById('sizeLimit').value);
+            } else if (activeMode === 'ranges') {
+                formData.append('ranges', document.getElementById('ranges').value);
             }
-            
+
             formData.append('password', document.getElementById('password').value);
             formData.append('naming_template', document.getElementById('naming').value);
 
@@ -290,7 +264,7 @@
                     a.click();
                     document.body.removeChild(a);
                     window.URL.revokeObjectURL(url);
-                    
+
                     showSuccess('PDF split successfully! Download should start automatically.');
                 } else {
                     const error = await response.json();
@@ -317,4 +291,5 @@
         }
     </script>
 </body>
+
 </html>

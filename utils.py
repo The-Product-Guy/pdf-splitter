@@ -15,5 +15,19 @@ def generate_filename(template, base_name, index, **kwargs):
     return template.format(
         base=base_name,
         index=index,
-        **kwargs
     )
+
+def validate_pdf_header(file_stream):
+    """
+    Validate that the file has a proper PDF header (Magic Number).
+    Reads the first 1024 bytes (sufficient for standard and some non-standard PDFs).
+    """
+    try:
+        header = file_stream.read(1024)
+        file_stream.seek(0)  # Reset stream position
+        # Check for %PDF- standard header or other known variations
+        if b'%PDF-' in header:
+            return True
+        return False
+    except Exception:
+        return False
