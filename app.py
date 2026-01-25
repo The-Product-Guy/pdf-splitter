@@ -10,8 +10,9 @@ from utils import validate_file_size, generate_filename, validate_pdf_header
 app = Flask(__name__, static_folder='static', static_url_path='/static', template_folder='templates')
 app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024  # 200MB limit
 
-# Get GTM ID from environment variable
+# Get Environment Variables
 GTM_ID = os.environ.get('GTM_ID', '')
+BASE_URL = os.environ.get('BASE_URL', 'https://smallpdfsplit.online')
 
 # Initialize Rate Limiter
 limiter = Limiter(
@@ -23,7 +24,7 @@ limiter = Limiter(
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html', gtm_id=GTM_ID)
+    return render_template('index.html', gtm_id=GTM_ID, base_url=BASE_URL)
 
 @app.route('/sitemap.xml')
 def sitemap():
@@ -35,19 +36,19 @@ def robots():
 
 @app.route('/about')
 def about():
-    return render_template('about.html', gtm_id=GTM_ID)
+    return render_template('about.html', gtm_id=GTM_ID, base_url=BASE_URL)
 
 @app.route('/terms')
 def terms():
-    return render_template('terms.html', gtm_id=GTM_ID)
+    return render_template('terms.html', gtm_id=GTM_ID, base_url=BASE_URL)
 
 @app.route('/privacy')
 def privacy():
-    return render_template('privacy.html', gtm_id=GTM_ID)
+    return render_template('privacy.html', gtm_id=GTM_ID, base_url=BASE_URL)
 
 @app.route('/contact')
 def contact():
-    return render_template('contact.html', gtm_id=GTM_ID)
+    return render_template('contact.html', gtm_id=GTM_ID, base_url=BASE_URL)
 
 @app.route('/health', methods=['GET'])
 def health_check():
