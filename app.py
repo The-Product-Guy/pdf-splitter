@@ -1,11 +1,11 @@
 from flask import Flask, request, jsonify, send_file, render_template
 import os
 import tempfile
-import shutil
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from werkzeug.utils import secure_filename
 from pdf_splitter import PDFSplitter
-from utils import validate_file_size, generate_filename, validate_pdf_header
+from utils import validate_file_size, validate_naming_template, validate_pdf_header
 
 app = Flask(__name__, static_folder='static', static_url_path='/static', template_folder='templates')
 app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024  # 200MB limit
@@ -66,32 +66,46 @@ def split_pdf():
     file = request.files['file']
     if file.filename == '':
         return jsonify({'error': 'No file selected'}), 400
-    
-    if not file.filename.lower().endswith('.pdf'):
+
+    filename = secure_filename(file.filename)
+    if not filename:
+        return jsonify({'error': 'Invalid filename'}), 400
+
+    if not filename.lower().endswith('.pdf'):
         return jsonify({'error': 'File must be a PDF'}), 400
-    
-    
-    
+
     # Strict Magic Number Validation
     if not validate_pdf_header(file.stream):
         return jsonify({'error': 'Invalid PDF file. Header check failed.'}), 400
     
     mode = request.form.get('mode', 'pages')
     password = request.form.get('password', '')
-    naming_template = request.form.get('naming_template', '{base}_part{index}')
+    try:
+        naming_template = validate_naming_template(
+            request.form.get('naming_template', '{base}_part{index}')
+        )
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
     
     try:
         with tempfile.TemporaryDirectory() as temp_dir:
-            input_path = os.path.join(temp_dir, file.filename)
+            input_path = os.path.join(temp_dir, filename)
             file.save(input_path)
+            validate_file_size(input_path)
             
             splitter = PDFSplitter(input_path, password)
             
             if mode == 'pages':
-                page_count = int(request.form.get('pageCount', 100))
+                try:
+                    page_count = int(request.form.get('pageCount', 100))
+                except ValueError:
+                    return jsonify({'error': 'pageCount must be an integer'}), 400
                 output_files = splitter.split_by_pages(page_count, naming_template)
             elif mode == 'size':
-                size_limit = int(request.form.get('sizeLimit', 50))
+                try:
+                    size_limit = int(request.form.get('sizeLimit', 50))
+                except ValueError:
+                    return jsonify({'error': 'sizeLimit must be an integer'}), 400
                 output_files = splitter.split_by_size(size_limit, naming_template)
             elif mode == 'ranges':
                 ranges = request.form.get('ranges', '')
@@ -104,9 +118,12 @@ def split_pdf():
             else:
                 zip_path = splitter.create_zip(output_files)
                 return send_file(zip_path, as_attachment=True)
-                
+
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.exception("Unhandled /split error")
+        return jsonify({'error': 'Internal server error'}), 500
 
 if __name__ == '__main__':
     import os

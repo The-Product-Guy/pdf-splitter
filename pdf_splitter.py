@@ -19,6 +19,31 @@ class PDFSplitter:
             raise ValueError("Invalid password for PDF")
         except Exception as e:
             raise ValueError(f"Could not open PDF: {str(e)}")
+
+    def _format_output_name(self, naming_template, base_name, index, range_value):
+        try:
+            return naming_template.format(
+                base=base_name,
+                index=index,
+                range=range_value
+            )
+        except KeyError:
+            raise ValueError("Invalid naming template placeholder")
+        except Exception as e:
+            raise ValueError(f"Invalid naming template: {str(e)}")
+
+    def _safe_output_path(self, output_filename):
+        safe_name = str(output_filename or "").strip().replace("\x00", "")
+        safe_name = safe_name.replace("/", "_").replace("\\", "_").replace("..", "_")
+        safe_name = safe_name.lstrip(".")
+        if not safe_name:
+            safe_name = "part"
+
+        output_path = os.path.abspath(os.path.join(self.temp_dir, f"{safe_name}.pdf"))
+        temp_root = os.path.abspath(self.temp_dir) + os.sep
+        if not output_path.startswith(temp_root):
+            raise ValueError("Invalid output filename")
+        return output_path
     
     def split_by_ranges(self, ranges_str, naming_template='{base}_part{index}'):
         """Split PDF by page ranges like '1-5,10-12,20-'"""
@@ -30,12 +55,13 @@ class PDFSplitter:
         base_name = Path(self.input_path).stem
         
         for i, (start, end) in enumerate(ranges):
-            output_filename = naming_template.format(
-                base=base_name,
-                index=i+1,
-                range=f"{start}-{end}" if end != len(self.pdf.pages) else f"{start}-"
+            output_filename = self._format_output_name(
+                naming_template,
+                base_name,
+                i + 1,
+                f"{start}-{end}" if end != len(self.pdf.pages) else f"{start}-"
             )
-            output_path = os.path.join(self.temp_dir, f"{output_filename}.pdf")
+            output_path = self._safe_output_path(output_filename)
             
             with pikepdf.new() as new_pdf:
                 for page_num in range(start-1, min(end, len(self.pdf.pages))):
@@ -58,12 +84,13 @@ class PDFSplitter:
             start_page = i + 1
             end_page = min(i + pages_per_split, total_pages)
             
-            output_filename = naming_template.format(
-                base=base_name,
-                index=(i // pages_per_split) + 1,
-                range=f"{start_page}-{end_page}"
+            output_filename = self._format_output_name(
+                naming_template,
+                base_name,
+                (i // pages_per_split) + 1,
+                f"{start_page}-{end_page}"
             )
-            output_path = os.path.join(self.temp_dir, f"{output_filename}.pdf")
+            output_path = self._safe_output_path(output_filename)
             
             with pikepdf.new() as new_pdf:
                 for page_num in range(i, end_page):
@@ -117,12 +144,13 @@ class PDFSplitter:
         start_page = page_numbers[0] + 1
         end_page = page_numbers[-1] + 1
         
-        output_filename = naming_template.format(
-            base=base_name,
-            index=chunk_index,
-            range=f"{start_page}-{end_page}"
+        output_filename = self._format_output_name(
+            naming_template,
+            base_name,
+            chunk_index,
+            f"{start_page}-{end_page}"
         )
-        output_path = os.path.join(self.temp_dir, f"{output_filename}.pdf")
+        output_path = self._safe_output_path(output_filename)
         
         with pikepdf.new() as new_pdf:
             for page_num in page_numbers:
