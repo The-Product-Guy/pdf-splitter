@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script>
+        // GTM Configuration — set your GTM ID here (or leave empty to disable)
+        window.APP_CONFIG = { GTM_ID: '', BASE_URL: 'https://smallpdfsplit.online' };
+    </script>
+    <script>(function () {
+            var id = window.APP_CONFIG.GTM_ID;
+            if (!id) return;
+            (function (w, d, s, l, i) {
+                w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+                var f = d.getElementsByTagName(s)[0], j = d.createElement(s),
+                    dl = l != 'dataLayer' ? '&l=' + l : '';
+                j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+                f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', id);
+        })();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Split PDF Online - Free Browser-Based Tool | No File Size Limits</title>
+    <meta name="description"
+        content="Split PDF by file size (MB), pages, or custom ranges. 100% browser-based — your files never leave your device. No file size limits. Free, private, and secure.">
+    <meta name="keywords"
+        content="split pdf by size, split large pdf free, browser based pdf splitter, extract pdf pages, private pdf splitter, no upload pdf tool">
+    <meta name="author" content="PDF Splitter">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://smallpdfsplit.online/">
+    <meta property="og:title" content="Split PDF Online - No File Size Limits">
+    <meta property="og:description"
+        content="Split PDFs by file size (MB) or pages. 100% browser-based — files never leave your device. Free and private.">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://smallpdfsplit.online/">
+    <meta property="twitter:title" content="Split PDF Online - No File Size Limits">
+    <meta property="twitter:description"
+        content="Split PDFs by file size (MB) or pages. 100% browser-based — files never leave your device. Free and private.">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <noscript>
+        <iframe id="gtm-noscript"></iframe>
+        <script>
+            (function () {
+                var id = window.APP_CONFIG && window.APP_CONFIG.GTM_ID;
+                if (id) document.getElementById('gtm-noscript').src =
+                    'https://www.googletagmanager.com/ns.html?id=' + id;
+            })();
+        </script>
+    </noscript>
+    <div class="container">
+        <h1>PDF Splitter</h1>
+        <p class="subtitle">Split by <strong>File Size (MB)</strong> or Pages. 100% Browser-Based — Your Files Never
+            Leave Your Device.</p>
+
+        <form id="splitForm">
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="pdfFile" name="file" accept=".pdf" style="display: none;">
+                <div id="uploadText">
+                    <strong>Drop your PDF here</strong><br>
+                    or click to browse<br>
+                    <small>No file size limits — 100% browser-based</small>
+                </div>
+            </div>
+
+            <div class="toggle-group">
+                <div class="toggle-option active" data-mode="pages">Split by pages</div>
+                <div class="toggle-option" data-mode="ranges">Split by ranges</div>
+                <div class="toggle-option" data-mode="size">Split by size</div>
+            </div>
+
+            <div class="form-group" id="pagesGroup">
+                <label for="pageCount">
+                    Number of pages per split
+                    <span class="info-icon"
+                        data-tooltip="How many pages should be in each split file? e.g., 100 will create files with 100 pages each.">i</span>
+                </label>
+                <input type="number" id="pageCount" name="pageCount" value="100" min="1" placeholder="e.g., 100">
+            </div>
+
+            <div class="form-group" id="sizeGroup" style="display: none;">
+                <label for="sizeLimit">
+                    Maximum size per split (MB)
+                    <span class="info-icon"
+                        data-tooltip="The maximum file size for each split file in Megabytes.">i</span>
+                </label>
+                <input type="number" id="sizeLimit" name="sizeLimit" value="50" min="1" placeholder="e.g., 50">
+            </div>
+
+            <div class="form-group" id="rangesGroup" style="display: none;">
+                <label for="ranges">
+                    Page ranges
+                    <span class="info-icon"
+                        data-tooltip="Specific pages or ranges to extract. Use commas to separate. e.g., '1-5, 10' will create one file with pages 1 to 5, and another with page 10.">i</span>
+                </label>
+                <input type="text" id="ranges" name="ranges" placeholder="e.g., 1-5, 8-10, 15-">
+                <small>Comma-separated ranges. Example: "1-5, 8-10" to extract pages 1-5 and 8-10 as separate
+                    files.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="password">
+                    Password (optional)
+                    <span class="info-icon"
+                        data-tooltip="If the PDF is password protected, enter the password here so it can be read.">i</span>
+                </label>
+                <input type="password" id="password" name="password" placeholder="Enter password">
+            </div>
+
+            <div class="advanced-section">
+                <button type="button" class="advanced-toggle" id="advancedToggle" aria-expanded="false">
+                    <span>Advanced Options</span>
+                    <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+
+                <div class="advanced-content" id="advancedContent" style="display: none;">
+                    <div class="form-group">
+                        <label for="naming">
+                            File naming template
+                            <span class="info-icon"
+                                data-tooltip="Define how output files are named.&#10;{base} = Original filename&#10;{index} = Part number&#10;e.g., '{base}_part{index}' becomes 'Contract_part1.pdf'">i</span>
+                        </label>
+                        <input type="text" id="naming" name="naming_template" value="{base}_part{index}"
+                            placeholder="{base}_part{index}">
+                        <small>Use {base} for original filename, {index} for part number</small>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Split PDF</button>
+
+            <div class="progress" id="progress" style="display: block; margin-top: 15px;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p id="progressText" style="font-size: 0.8rem; color: #718096; margin-top: 5px;"></p>
+            </div>
+
+            <div class="error" id="error"></div>
+        </form>
+
+        <!-- Processing View -->
+        <div id="processingView" class="state-view">
+            <div class="spinner"></div>
+            <div class="processing-text">Processing your PDF...</div>
+            <div class="processing-sub" id="processingSubText">This happens entirely in your browser</div>
+
+            <!-- Ad Unit #1 (Waiting Room) -->
+            <div class="ad-placeholder" id="ad-processing">
+                <!-- Ad code will go here -->
+            </div>
+        </div>
+
+        <!-- Success View -->
+        <div id="successView" class="state-view">
+            <div class="success-icon">&#10003;</div>
+            <div class="processing-text">File Ready!</div>
+            <div class="processing-sub">Your split PDF has been created.</div>
+
+            <!-- Ad Unit #2 (Result) -->
+            <div class="ad-placeholder" id="ad-success" style="min-height: 150px; margin: 15px 0;">
+                <!-- Ad code will go here -->
+            </div>
+
+            <div class="btn-group">
+                <a href="#" id="downloadLink" class="download-btn">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download
+                </a>
+                <button type="button" class="reset-btn" id="resetBtn">Try Another File</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/terms">Terms</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/contact">Contact</a>
+        </nav>
+        <span class="copyright">&copy; 2025 PDF Splitter. All rights reserved.</span>
+    </footer>
+
+    <script src="js/pdf-splitter.js"></script>
+</body>
+
+</html>
