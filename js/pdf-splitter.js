@@ -72,12 +72,16 @@
     processingView.classList.add('active');
     successView.classList.remove('active');
     updateProgress(0, 'Starting...');
+    // Initialize AdSense ad now that the container is visible
+    try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
   }
 
   function showSuccess() {
     form.style.display = 'none';
     processingView.classList.remove('active');
     successView.classList.add('active');
+    // Initialize AdSense ad now that the container is visible
+    try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
   }
 
   function showForm() {
