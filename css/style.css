@@ -757,6 +757,44 @@ footer .copyright a:hover {
     box-shadow: 0 4px 12px rgba(10, 67, 215, 0.1);
 }
 
+/* --- Support CTA --- */
+.support-cta {
+    text-align: center;
+    margin: 20px 0 8px;
+    padding: 16px;
+    background: var(--clr-surface);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--clr-border);
+}
+
+.support-cta p {
+    margin: 0 0 10px;
+    font-size: 0.85rem;
+    color: var(--clr-text-muted);
+}
+
+.support-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    background: #FF5E5B;
+    color: white;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: var(--font-body);
+    text-decoration: none;
+    transition: all 0.25s var(--ease-out);
+    box-shadow: 0 2px 8px rgba(255, 94, 91, 0.2);
+}
+
+.support-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(255, 94, 91, 0.35);
+    filter: brightness(1.05);
+}
+
 /* --- Ad Placeholders --- */
 .ad-placeholder {
     display: block;
