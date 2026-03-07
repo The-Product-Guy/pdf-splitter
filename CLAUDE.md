@@ -11,9 +11,10 @@ Browser-first PDF splitting tool. All PDF processing happens client-side using J
 - **Frontend**: Vanilla HTML/CSS/JS (no framework, no build step)
 - **PDF Processing**: pdf-lib (v1.17.1) — runs in a Web Worker
 - **ZIP Creation**: JSZip (v3.10.1) — for multi-file downloads
-- **Styling**: Custom CSS with Glassmorphism design, Inter font
+- **Styling**: Custom CSS with Ambion Softwares branding (navy blues), Poppins + DM Sans typography
 - **Deployment**: Railway (Python static file server)
-- **Analytics**: Google Tag Manager (optional, configured via `APP_CONFIG.GTM_ID`)
+- **Analytics**: Umami (self-hosted on Railway) + Google Tag Manager (optional)
+- **Monetization**: Google AdSense (ca-pub-7556107501563555)
 
 ## Project Structure
 
@@ -29,8 +30,12 @@ Browser-first PDF splitting tool. All PDF processing happens client-side using J
 ├── serve.py                # Static file server (Railway)
 ├── railway.json            # Railway deployment config
 ├── runtime.txt             # Python version for Railway
+├── ads.txt                 # Google AdSense authorization
+├── img/
+│   ├── logo.svg            # Ambion Softwares logo (SVG, preferred)
+│   └── logo.png            # Ambion Softwares logo (PNG fallback)
 ├── css/
-│   └── style.css           # All styles (Glassmorphism, responsive)
+│   └── style.css           # All styles (Ambion branding, responsive)
 ├── js/
 │   ├── pdf-splitter.js     # Main thread: UI, file reading, worker mgmt
 │   ├── pdf-worker.js       # Web Worker: PDF splitting logic
@@ -98,6 +103,9 @@ curl -sL "https://cdn.jsdelivr.net/npm/jszip@VERSION/dist/jszip.min.js" -o js/ve
 ## Conventions
 
 - No build step — all files are served directly
-- CSS uses Inter font via Google Fonts import
-- All HTML pages share the same GTM boilerplate and footer navigation
+- **Brand**: Ambion Softwares identity — navy blue palette, Poppins headlines, DM Sans body text
+- **Logo**: SVG preferred (`img/logo.svg`), viewBox cropped to content area; PNG fallback available
+- CSS design tokens defined as CSS custom properties in `:root`
+- All HTML pages share the same brand header (logo), GTM boilerplate, Umami analytics, and footer navigation
+- Footer links to ambionsoftwares.com
 - `legacy/` folder contains the old Flask/pikepdf server code for reference

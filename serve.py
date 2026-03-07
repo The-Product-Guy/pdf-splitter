@@ -36,7 +36,7 @@ class CleanURLHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Referrer-Policy', 'strict-origin-when-cross-origin')
 
         # Cache static assets aggressively
-        if any(self.path.startswith(p) for p in ['/css/', '/js/']):
+        if any(self.path.startswith(p) for p in ['/css/', '/js/', '/img/']):
             self.send_header('Cache-Control', 'public, max-age=31536000, immutable')
         elif self.path.endswith('.html') or self.path == '/':
             self.send_header('Cache-Control', 'public, max-age=3600')
