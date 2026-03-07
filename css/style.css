@@ -506,29 +506,11 @@ footer .copyright {
 
 /* Ad Placeholders */
 .ad-placeholder {
-    display: none;
-    /* Hidden for now as per user request */
-    background: #f1f5f9;
-    border: 2px dashed #cbd5e0;
+    display: block;
     border-radius: 12px;
     margin: 25px 0;
-    /* display: flex; */
-    align-items: center;
-    justify-content: center;
-    color: #94a3b8;
-    font-size: 0.85rem;
-    font-weight: 500;
-    min-height: 250px;
-    position: relative;
+    min-height: 100px;
     overflow: hidden;
-}
-
-.ad-placeholder::before {
-    content: 'Advertisement';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 
 /* Mobile Responsive */
