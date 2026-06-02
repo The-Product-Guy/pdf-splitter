@@ -11,23 +11,36 @@ import sys
 class CleanURLHandler(http.server.SimpleHTTPRequestHandler):
     """HTTP handler that supports clean URLs (e.g., /about → /about.html)."""
 
-    def do_GET(self):
-        # Health check endpoint
-        if self.path == '/health':
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.end_headers()
+    def _send_health(self, include_body=True):
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json')
+        self.end_headers()
+        if include_body:
             self.wfile.write(b'{"status":"healthy","service":"pdf-splitter"}')
-            return
 
-        # Clean URL support: /about → /about.html
+    def _apply_clean_url(self):
+        """Map clean URL paths to their static HTML files."""
         if self.path != '/' and '.' not in self.path.split('/')[-1]:
             html_path = self.path.rstrip('/') + '.html'
             test_path = self.translate_path(html_path)
             if os.path.isfile(test_path):
                 self.path = html_path
 
+    def do_GET(self):
+        if self.path == '/health':
+            self._send_health()
+            return
+
+        self._apply_clean_url()
         return super().do_GET()
+
+    def do_HEAD(self):
+        if self.path == '/health':
+            self._send_health(include_body=False)
+            return
+
+        self._apply_clean_url()
+        return super().do_HEAD()
 
     def end_headers(self):
         # Add security headers

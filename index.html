@@ -19,26 +19,86 @@
         })();</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Split PDF Online - Free Browser-Based Tool | No File Size Limits</title>
+    <title>Split Large PDF Files Online - Private Browser PDF Splitter</title>
     <meta name="description"
-        content="Split PDF by file size (MB), pages, or custom ranges. 100% browser-based — your files never leave your device. No file size limits. Free, private, and secure.">
+        content="Split large PDF files by size, pages, or custom ranges. Browser-based and private — your PDF stays on your device with no server upload.">
     <meta name="keywords"
-        content="split pdf by size, split large pdf free, browser based pdf splitter, extract pdf pages, private pdf splitter, no upload pdf tool">
+        content="split large pdf, split pdf by size, split pdf into smaller files, browser based pdf splitter, extract pdf pages, private pdf splitter">
     <meta name="author" content="PDF Splitter">
+    <link rel="canonical" href="https://smallpdfsplit.online/">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://smallpdfsplit.online/">
-    <meta property="og:title" content="Split PDF Online - No File Size Limits">
+    <meta property="og:title" content="Split Large PDF Files Privately in Your Browser">
     <meta property="og:description"
-        content="Split PDFs by file size (MB) or pages. 100% browser-based — files never leave your device. Free and private.">
+        content="Split PDFs by size, pages, or ranges without uploading the file to a server.">
+    <meta property="og:image" content="https://smallpdfsplit.online/og-image.svg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://smallpdfsplit.online/">
-    <meta property="twitter:title" content="Split PDF Online - No File Size Limits">
+    <meta property="twitter:title" content="Split Large PDF Files Privately in Your Browser">
     <meta property="twitter:description"
-        content="Split PDFs by file size (MB) or pages. 100% browser-based — files never leave your device. Free and private.">
+        content="Split PDFs into smaller chunks by pages, ranges, or target size. Your file stays on your device.">
+    <meta property="twitter:image" content="https://smallpdfsplit.online/og-image.svg">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "PDF Splitter",
+        "url": "https://smallpdfsplit.online/",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires a modern browser with JavaScript enabled",
+        "description": "A browser-based PDF splitter for splitting large PDF files into smaller chunks by page count, page ranges, or approximate target file size.",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "featureList": [
+            "Split large PDF files locally in the browser",
+            "Split by page count",
+            "Extract custom page ranges",
+            "Split into approximate target file sizes",
+            "Download one PDF or a ZIP of split PDFs"
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Does PDF Splitter upload my PDF?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. The main PDF splitting tool runs in your browser, so the selected PDF stays on your device."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I split a large PDF into smaller files?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. You can split a PDF by page count, custom page ranges, or an approximate target size for each output file."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Why does splitting by file size say approximate?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "PDF file size depends on embedded images, fonts, and document structure. The browser tool creates smaller chunks near the requested size, but exact byte-level sizes can vary."
+                }
+            }
+        ]
+    }
+    </script>
 
     <link rel="stylesheet" href="css/style.css">
 
@@ -75,7 +135,7 @@
                 <div id="uploadText">
                     <strong>Drop your PDF here</strong><br>
                     or click to browse<br>
-                    <small>No file size limits — 100% browser-based</small>
+                    <small>No server upload limit — browser memory is the practical limit</small>
                 </div>
             </div>
 
@@ -96,9 +156,9 @@
 
             <div class="form-group" id="sizeGroup" style="display: none;">
                 <label for="sizeLimit">
-                    Maximum size per split (MB)
+                    Target size per split (MB)
                     <span class="info-icon"
-                        data-tooltip="The maximum file size for each split file in Megabytes.">i</span>
+                        data-tooltip="The target output size for each split file. PDF structure can make exact sizes vary.">i</span>
                 </label>
                 <input type="number" id="sizeLimit" name="sizeLimit" value="50" min="1" placeholder="e.g., 50">
             </div>
@@ -204,6 +264,46 @@
             </div>
         </div>
     </div>
+
+    <section class="seo-content" aria-labelledby="large-pdf-splitter">
+        <h2 id="large-pdf-splitter">Split big PDFs into smaller chunks without uploading them</h2>
+        <p>PDF Splitter is built for large documents such as reports, contracts, scanned packets, invoices, and study
+            material. Select a PDF, choose how you want to split it, and your browser creates the new files locally.</p>
+
+        <div class="seo-grid">
+            <article>
+                <h3>Split by pages</h3>
+                <p>Create smaller PDFs every 5, 10, 50, or 100 pages. This is useful when you need predictable chunks
+                    for email, forms, or document portals.</p>
+            </article>
+            <article>
+                <h3>Extract ranges</h3>
+                <p>Pull out exact page ranges such as 1-5, 8-10, or 15-. Use this when you only need specific sections
+                    from a long PDF.</p>
+            </article>
+            <article>
+                <h3>Target file size</h3>
+                <p>Ask the tool to create smaller files near a target size, such as 10MB or 25MB. Exact output size can
+                    vary because every PDF stores images, fonts, and pages differently.</p>
+            </article>
+        </div>
+
+        <h2>FAQ</h2>
+        <details>
+            <summary>Does my PDF leave my computer?</summary>
+            <p>No. The main splitting workflow runs in your browser. Your selected PDF is not uploaded to our server.</p>
+        </details>
+        <details>
+            <summary>Can this split PDFs larger than 200MB?</summary>
+            <p>Often yes, because the file is not sent through a server upload limit. The practical limit depends on
+                your browser, device memory, and the PDF structure.</p>
+        </details>
+        <details>
+            <summary>Are password-protected PDFs supported?</summary>
+            <p>Some encrypted PDFs may not be supported by the browser PDF engine. If splitting fails, try an
+                unencrypted copy of the document.</p>
+        </details>
+    </section>
 
     <footer>
         <nav>

@@ -15,10 +15,22 @@ function reportProgress(percent, message) {
 }
 
 function formatName(template, baseName, index, range) {
-  return template
+  const formatted = template
     .replace(/\{base\}/g, baseName)
     .replace(/\{index\}/g, String(index))
     .replace(/\{range\}/g, range);
+  const safeName = sanitizeFilePart(formatted) || `part_${index}`;
+  return safeName.slice(0, 100);
+}
+
+function sanitizeFilePart(value) {
+  return String(value || '')
+    .replace(/[\x00-\x1f\x7f]/g, '')
+    .replace(/[\\/]/g, '_')
+    .replace(/\.{2,}/g, '.')
+    .replace(/[^A-Za-z0-9._() -]/g, '_')
+    .replace(/^\.+/, '')
+    .trim();
 }
 
 function parseRanges(rangesStr, totalPages) {

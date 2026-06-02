@@ -1,34 +1,32 @@
-# PDF Splitter - Secure, Private, & Beautiful
+# PDF Splitter - Private Browser PDF Splitting
 
-A modern, privacy-focused web application for splitting PDF files. Built with Flask, it features a stunning Glassmorphism UI, "Zero Retention" architecture, and robust security measures.
+A modern, privacy-focused web application for splitting PDF files. The main workflow runs in the browser, so users can split large PDFs into smaller chunks without uploading the file to the server.
 
-![PDF Splitter UI](https://pdf-splitter.railway.app/og-image.jpg)
+![PDF Splitter UI](https://smallpdfsplit.online/og-image.svg)
 
 ## ✨ Features
 
--   **Zero Retention Policy**: Files are processed in temporary memory and strictly deleted immediately after download. Nothing is stored on our servers.
--   **Local Processing**: The backend handles files ephemerally, ensuring maximum privacy.
+-   **Browser-Based Processing**: PDFs are read, split, and packaged locally in the user's browser.
+-   **No Upload Required**: The primary web tool does not send PDF contents to the server.
 -   **Split Modes**:
     -   **By Pages**: Split into chunks of N pages (e.g., every 10 pages).
-    -   **By Size**: Split into chunks of X MB (e.g., max 10MB per file).
+    -   **By Size**: Split into approximate chunks of X MB (e.g., target 10MB per file).
     -   **By Range**: Extract specific ranges (e.g., `1-5, 10-12`).
 -   **Advanced Naming**: Custom templates for output filenames (e.g., `Contract_{index}.pdf`).
 -   **Security**:
-    -   Strict Magic Number validation (prevents fake PDF uploads).
-    -   Rate Limiting (10 requests/hour per IP).
-    -   Bot Protection (Honeypot fields).
--   **Modern UI**: Fully responsive Glassmorphism design with animations and dark-mode friendly gradients.
+    -   Browser-side PDF processing with no server upload in the primary workflow.
+    -   Legacy server implementation is retained under `legacy/` for reference.
+-   **Modern UI**: Fully responsive design with animations and a navy-blue Ambion Softwares brand system.
 -   **SEO Optimized**: Full meta tag support, sitemap, and Open Graph data.
 
 ## 🚀 Live Demo
 
-Check out the live deployment here: [PDF Splitter Demo](https://pdf-splitter.railway.app/)
+Check out the live deployment here: [PDF Splitter Demo](https://smallpdfsplit.online/)
 
 ## 🛠️ Local Development
 
 ### Prerequisites
 -   Python 3.11+
--   pip
 
 ### Setup
 
@@ -38,23 +36,12 @@ Check out the live deployment here: [PDF Splitter Demo](https://pdf-splitter.rai
     cd pdf-splitter
     ```
 
-2.  **Create virtual environment**
+2.  **Run the static server**
     ```bash
-    python -m venv venv
-    source venv/bin/activate  # Windows: venv\Scripts\activate
+    python serve.py
     ```
 
-3.  **Install dependencies**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4.  **Run the application**
-    ```bash
-    python app.py
-    ```
-
-5.  **Visit** `http://localhost:8000`
+3.  **Visit** `http://localhost:8000`
 
 ## 📦 Deployment (Railway)
 
@@ -64,14 +51,14 @@ This project is optimized for [Railway](https://railway.app/).
 2.  **Connect** in Railway.
 3.  **Deploy**! No complex configuration needed.
     -   `railway.json` handles the build schema.
-    -   `Procfile` / `Start Command`: `gunicorn app:app`
+    -   Start command: `python serve.py`
 
 ## 🔒 Privacy & Security
 
 We take privacy seriously:
 -   **No Database**: We don't track users or save file metadata.
--   **Ephemeral Storage**: `tempfile` is used for processing, which is OS-managed and self-cleaning.
--   **Validation**: Every upload is binary-scanned for `%PDF` headers to prevent malware injection vectors.
+-   **Local First**: The main splitting workflow runs in the browser, keeping PDF contents on the user's device.
+-   **No Upload Step**: Large PDF files are not sent through Railway or Cloudflare for the primary tool.
 
 ## 📄 License
 

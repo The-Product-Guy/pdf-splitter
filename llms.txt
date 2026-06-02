@@ -1,0 +1,14 @@
+# PDF Splitter
+
+PDF Splitter is a free browser-based tool for splitting large PDF files into smaller chunks by page count, page ranges, or approximate target file size.
+
+Key facts:
+- The main PDF splitting workflow runs locally in the user's browser.
+- PDF files are not uploaded to the server for the primary web tool.
+- Users can download one PDF or a ZIP containing multiple split PDFs.
+- The public website is available at https://smallpdfsplit.online/.
+
+Primary pages:
+- Home and tool: https://smallpdfsplit.online/
+- Privacy policy: https://smallpdfsplit.online/privacy
+- About: https://smallpdfsplit.online/about

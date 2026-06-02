@@ -18,13 +18,19 @@
     if (template.includes('/') || template.includes('\\') || template.includes('..')) {
       throw new Error('Naming template cannot contain path separators');
     }
-    const placeholderRegex = /\{(\w+)\}/g;
-    let match;
-    while ((match = placeholderRegex.exec(template)) !== null) {
-      if (!ALLOWED_TEMPLATE_FIELDS.has(match[1])) {
+
+    const fields = [...template.matchAll(/\{([^{}]+)\}/g)].map(match => match[1]);
+    for (const field of fields) {
+      if (!ALLOWED_TEMPLATE_FIELDS.has(field)) {
         throw new Error('Naming template can only use {base}, {index}, and {range}');
       }
     }
+
+    const remaining = template.replace(/\{(?:base|index|range)\}/g, '');
+    if (remaining.includes('{') || remaining.includes('}')) {
+      throw new Error('Naming template contains invalid braces');
+    }
+
     return template;
   }
 
@@ -131,7 +137,10 @@
 
   function updateUploadText(file) {
     const sizeMB = (file.size / 1024 / 1024).toFixed(1);
-    uploadText.innerHTML = `<strong>${file.name}</strong><br>${sizeMB} MB`;
+    uploadText.textContent = '';
+    const name = document.createElement('strong');
+    name.textContent = file.name;
+    uploadText.append(name, document.createElement('br'), `${sizeMB} MB`);
     errorDiv.style.display = 'none';
 
     // Memory warning for very large files
@@ -284,7 +293,7 @@
     cleanupBlob();
     form.reset();
     fileInput.value = '';
-    uploadText.innerHTML = '<strong>Drop your PDF here</strong><br>or click to browse<br><small>No file size limits \u2014 100% browser-based</small>';
+    uploadText.innerHTML = '<strong>Drop your PDF here</strong><br>or click to browse<br><small>No server upload limit &mdash; browser memory is the practical limit</small>';
     errorDiv.style.display = 'none';
     showForm();
   });

@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://pdf-splitter.railway.app/sitemap.xml
