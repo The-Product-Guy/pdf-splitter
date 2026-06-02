@@ -11,6 +11,26 @@
         <priority>0.8</priority>
     </url>
     <url>
+        <loc>https://smallpdfsplit.online/split-pdf-over-200mb</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://smallpdfsplit.online/split-pdf-by-size</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://smallpdfsplit.online/split-pdf-without-uploading</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://smallpdfsplit.online/extract-pdf-pages</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
         <loc>https://smallpdfsplit.online/terms</loc>
         <changefreq>yearly</changefreq>
         <priority>0.5</priority>
