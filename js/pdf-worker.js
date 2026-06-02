@@ -270,6 +270,8 @@ self.onmessage = async function (e) {
       self.postMessage({
         type: 'complete',
         fileType: 'pdf',
+        fileCount: results.length,
+        totalPages,
         filename: results[0].filename,
         data: results[0].bytes
       }, transferable);
@@ -290,6 +292,8 @@ self.onmessage = async function (e) {
       self.postMessage({
         type: 'complete',
         fileType: 'zip',
+        fileCount: results.length,
+        totalPages,
         filename: 'split_pdfs.zip',
         data: zipBlob
       }, transferable);

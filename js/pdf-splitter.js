@@ -59,6 +59,56 @@
     }
   }
 
+  // ── Anonymous Analytics Helpers ─────────────────────────────────────────
+
+  function trackUsageEvent(eventName, properties) {
+    if (!window.umami || typeof window.umami.track !== 'function') return;
+
+    try {
+      window.umami.track(eventName, properties);
+    } catch (e) {
+      // Analytics must never interrupt PDF processing.
+    }
+  }
+
+  function getFileSizeBucket(file) {
+    const sizeMB = file.size / 1024 / 1024;
+    if (sizeMB < 5) return 'under_5mb';
+    if (sizeMB < 25) return '5_to_25mb';
+    if (sizeMB < 100) return '25_to_100mb';
+    if (sizeMB < 250) return '100_to_250mb';
+    if (sizeMB < 500) return '250_to_500mb';
+    return 'over_500mb';
+  }
+
+  function getCountBucket(count) {
+    if (!Number.isFinite(count) || count < 1) return 'unknown';
+    if (count === 1) return '1';
+    if (count <= 5) return '2_to_5';
+    if (count <= 20) return '6_to_20';
+    return 'over_20';
+  }
+
+  function getPageCountBucket(count) {
+    if (!Number.isFinite(count) || count < 1) return 'unknown';
+    if (count <= 10) return '1_to_10';
+    if (count <= 50) return '11_to_50';
+    if (count <= 200) return '51_to_200';
+    if (count <= 500) return '201_to_500';
+    return 'over_500';
+  }
+
+  function getErrorCategory(error) {
+    const message = String(error && error.message ? error.message : '').toLowerCase();
+
+    if (message.includes('password') || message.includes('encrypt')) return 'encrypted_or_password';
+    if (message.includes('corrupted') || message.includes('unsupported')) return 'invalid_or_unsupported_pdf';
+    if (message.includes('range') || message.includes('page')) return 'invalid_page_range';
+    if (message.includes('read')) return 'file_read_error';
+    if (message.includes('processing')) return 'worker_error';
+    return 'unknown';
+  }
+
   // ── UI Helpers ───────────────────────────────────────────────────────────
 
   const form = document.getElementById('splitForm');
@@ -183,7 +233,7 @@
 
   function processPDF(file, action, options) {
     return new Promise((resolve, reject) => {
-      const worker = new Worker('js/pdf-worker.js');
+      const worker = new Worker('js/pdf-worker.js?v=20260602-usage-layout');
 
       worker.onmessage = function (e) {
         const { type } = e.data;
@@ -270,8 +320,14 @@
       action = 'splitByRanges';
     }
 
+    const analyticsContext = {
+      mode: activeMode,
+      file_size_bucket: getFileSizeBucket(file)
+    };
+
     showProcessing();
     errorDiv.style.display = 'none';
+    trackUsageEvent('pdf_split_started', analyticsContext);
 
     try {
       const result = await processPDF(file, action, options);
@@ -280,8 +336,18 @@
       triggerDownload(result.data, result.filename, mimeType);
 
       updateProgress(100, 'Done!');
+      trackUsageEvent('pdf_split_completed', {
+        ...analyticsContext,
+        output_type: result.fileType || 'unknown',
+        output_count_bucket: getCountBucket(result.fileCount),
+        page_count_bucket: getPageCountBucket(result.totalPages)
+      });
       showSuccess();
     } catch (error) {
+      trackUsageEvent('pdf_split_failed', {
+        ...analyticsContext,
+        error_category: getErrorCategory(error)
+      });
       showError(error.message);
       showForm();
     }
